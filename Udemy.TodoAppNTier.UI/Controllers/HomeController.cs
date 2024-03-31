@@ -27,7 +27,7 @@ namespace Udemy.TodoAppNTier.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(WorkCreateDto dto)
         {
-
+            //nadi 
             //bakcam daha sonra
             var reponse=await _workService.Create(dto);
             return this.ResponseRedirecttoAction(reponse, "Index");
