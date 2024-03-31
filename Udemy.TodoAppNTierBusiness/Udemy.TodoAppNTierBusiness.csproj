@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="5.2.0" />
+    <PackageReference Include="FluentValidation" Version="5.6.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Udemy.TodoAppNTier.Common\Udemy.TodoAppNTier.Common.csproj" />
+    <ProjectReference Include="..\Udemy.TodoAppNTier.DataAccess\Udemy.TodoAppNTier.DataAccess.csproj" />
+    <ProjectReference Include="..\Udemy.TodoAppNTier.Dtos\Udemy.TodoAppNTier.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>

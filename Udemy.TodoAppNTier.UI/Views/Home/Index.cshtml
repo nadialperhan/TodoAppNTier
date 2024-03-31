@@ -1,0 +1,35 @@
+﻿@model List<WorkListDtos>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Todo App</title>
+    <link href="~/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <a class="btn btn-primary mb-2" asp-controller="Home" asp-action="Create">Yeni Oluştur</a>
+
+    <div class="container" my-2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Definiation</th>
+                    <th>isCompleted</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Definition</td>
+                        <td>@(item.IsCompleted?"Tamamlandı":"Tamamlanmadı")</td>
+                        <td>
+                            <a asp-action="Update" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-warning">Güncelle</a>
+                            <a asp-action="Remove" asp-controller="Home" asp-route-id="@item.Id" class="btn btn bg-danger">Sil</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
