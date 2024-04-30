@@ -19,7 +19,8 @@ namespace Udemy.TodoAppNTierBusiness.Extensions
                 var prmString = "";
                 for (int i = 0; i < paramz.Count; i++)
                 {
-                    var prm = new SqlParameter(paramz[i].Key, paramz[i].Key);
+                    //var prm = new SqlParameter(paramz[i].Key, paramz[i].Key);
+                    var prm = new SqlParameter("@" + paramz[i].Key, paramz[i].Value); // Anahtar ve değerler düzeltiliyor
                     sqlParams[i] = prm;
                     if (i==0)
                     {
