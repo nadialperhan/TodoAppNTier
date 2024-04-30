@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
+using Udemy.TodoAppNTier.DataAccess.Context;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
 using Udemy.TodoAppNTier.UI.Extensions;
 using Udemy.TodoAppNTierBusiness.Services;
@@ -10,6 +12,7 @@ namespace Udemy.TodoAppNTier.UI.Controllers
     public class HomeController : Controller
     {
         private readonly IWorkService _workService;
+
         public HomeController(IWorkService workService)
         {
             _workService = workService;
@@ -85,5 +88,11 @@ namespace Udemy.TodoAppNTier.UI.Controllers
         {
             return View();
         }
+        //public async Task< IActionResult> Deneme()
+        //{
+        //    int id = 2;
+        //    var a=await _context.Database.ExecuteSqlRawAsync("EXEC sp_Deneme @id", id);
+        //    return View();
+        //}
     }
 }

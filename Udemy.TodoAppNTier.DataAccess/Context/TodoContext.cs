@@ -11,6 +11,10 @@ namespace Udemy.TodoAppNTier.DataAccess.Context
 {
     public class TodoContext:DbContext
     {
+        public TodoContext()
+        {
+
+        }
         public TodoContext(DbContextOptions<TodoContext> options):base(options)
         {
 

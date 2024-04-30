@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Udemy.TodoAppNTier.DataAccess.Contexts;
 using Udemy.TodoAppNTier.DataAccess.UnitofWork;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
@@ -19,12 +16,18 @@ namespace Udemy.TodoAppNTierBusiness.DependencyResolvers.Microsoft
 {
     public static class DependencyExtension
     {
-        public static void AddDependencies(this IServiceCollection services)
+        public static void AddDependencies(this IServiceCollection services, IConfiguration configuratio)
         {
 
+            var connectionString = configuratio.GetConnectionString("DefaultConnection");
+            //services.AddDbContext<TodoContext>(opt =>
+            //{
+            //    opt.UseSqlServer("server=(localdb)\\mssqllocaldb;database=TodoDb;integrated security=true;");
+            //    opt.LogTo(Console.WriteLine, LogLevel.Information);
+            //});
             services.AddDbContext<TodoContext>(opt =>
             {
-                opt.UseSqlServer("server=(localdb)\\mssqllocaldb;database=TodoDb;integrated security=true;");
+                opt.UseSqlServer(connectionString);
                 opt.LogTo(Console.WriteLine, LogLevel.Information);
             });
 

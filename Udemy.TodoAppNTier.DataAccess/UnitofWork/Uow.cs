@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using Udemy.TodoAppNTier.DataAccess.Contexts;
 using Udemy.TodoAppNTier.DataAccess.Interfaces;
 using Udemy.TodoAppNTier.DataAccess.Repositories;
@@ -17,10 +18,14 @@ namespace Udemy.TodoAppNTier.DataAccess.UnitofWork
         {
             return new Repository<T>(_context);
         }
-
+        
         public async Task SaveChanges()
         {
            await _context.SaveChangesAsync();
         }
+        //public DbContext GetDbContext()
+        //{
+        //    return _context;
+        //}
     }
 }

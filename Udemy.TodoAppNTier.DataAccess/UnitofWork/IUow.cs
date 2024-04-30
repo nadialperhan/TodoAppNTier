@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Udemy.TodoAppNTier.DataAccess.UnitofWork
         IRepository<T> GetRepository<T>() where T : BaseEntity;
 
         Task SaveChanges();
+        
+        //DbContext GetDbContext();
     }
 }

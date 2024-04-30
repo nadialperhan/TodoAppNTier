@@ -37,6 +37,18 @@ namespace Udemy.TodoAppNTierBusiness.Services
                 return new Response<WorkCreateDto>(ResponseType.ValidationError, createDto, validationresult.ConvertToCustomValidationError());
             }
         }
+        
+        //public Task<IResponse<List<WorkListDtos>>> DenemeNadi()
+        //{
+        //    throw new System.NotImplementedException();
+        //}
+
+        //public Task<IEnumerable<TResult>> ExecuteStoredProcedureAsync<TResult>(string storedProcedureName, params object[] parameters) where TResult : class
+        //{
+        //    return await _uow.GetRepository<TResult>().ExecuteStoredProcedureAsync(storedProcedureName, parameters);
+
+        //}
+
         public async Task<IResponse<List<WorkListDtos>>> GetAll()
         {          
             var data= _mapper.Map<List<WorkListDtos>>(await _uow.GetRepository<Work>().GetAll());
@@ -51,6 +63,8 @@ namespace Udemy.TodoAppNTierBusiness.Services
             }
             return new Response<IDto>(ResponseType.Success,data);
         }
+
+      
         public async Task<IResponse> Remove(int id)
         {
             var removedEntity = await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id);
@@ -81,5 +95,16 @@ namespace Udemy.TodoAppNTierBusiness.Services
                 return new Response<WorkUpdatedDto>(ResponseType.ValidationError, dto, result.ConvertToCustomValidationError());
             }
         }
+        //public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
+        //{
+        //    List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+        //    var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
+
+        //    var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("a",  parameters);
+
+        //    return results;
+        //}
+
+        
     }
 }
