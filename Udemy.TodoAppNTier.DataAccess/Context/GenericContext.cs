@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Udemy.TodoAppNTier.DataAccess.Context
 {
-    public class GenericContext<T> : AppDbContext where T : class, new()
+    public class GenericContext<T> :TodoContext where T:class,new()/*: AppDbContext where T : class, new()*/
     {
         private readonly string _connectionString;
-        public GenericContext(string connectionString) : base(connectionString)
+        public GenericContext(string connectionString) /*: base(connectionString)*/
         {
             _connectionString = connectionString;
 

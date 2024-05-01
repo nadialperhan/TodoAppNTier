@@ -67,11 +67,14 @@ namespace Udemy.TodoAppNTierBusiness.Services
         public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
         {
             List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-            parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
-            parameters.Add(KeyValuePair.Create<string, object>("@UserName", "nadi"));
+            parameters.Add(KeyValuePair.Create<string, object>("@Definition", "pari"));
+            parameters.Add(KeyValuePair.Create<string, object>("@IsCompleted", true)); 
+
+            //parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
+            //parameters.Add(KeyValuePair.Create<string, object>("@UserName", "nadi"));
             var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
 
-            var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("a", parameters);
+            var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("Deneme", parameters);
             return results;
         }
 

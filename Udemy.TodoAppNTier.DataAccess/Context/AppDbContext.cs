@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Udemy.TodoAppNTier.DataAccess.Context
 {
-    public class AppDbContext:TodoContext
+    public class AppDbContext//:TodoContext
     {
         private readonly string _connectionString;
 
@@ -16,10 +16,10 @@ namespace Udemy.TodoAppNTier.DataAccess.Context
             _connectionString = connectionString;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(_connectionString);
+        //}
       
     }
 }
