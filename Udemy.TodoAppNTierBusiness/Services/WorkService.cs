@@ -64,7 +64,17 @@ namespace Udemy.TodoAppNTierBusiness.Services
             return new Response<IDto>(ResponseType.Success,data);
         }
 
-      
+        public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
+        {
+            List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+            parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
+            parameters.Add(KeyValuePair.Create<string, object>("@UserName", "nadi"));
+            var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
+
+            var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("a", parameters);
+            return results;
+        }
+
         public async Task<IResponse> Remove(int id)
         {
             var removedEntity = await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id);
@@ -98,13 +108,15 @@ namespace Udemy.TodoAppNTierBusiness.Services
         //public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
         //{
         //    List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+        //    parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
+        //    parameters.Add(KeyValuePair.Create<string, object>("@UserName", "nadi"));
         //    var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
 
         //    var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("a", parameters);
-
+            
         //    return results;
         //}
 
-
+       
     }
 }

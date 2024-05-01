@@ -18,6 +18,7 @@ namespace Udemy.TodoAppNTierBusiness.Services
         Task<IResponse<IDto>> GetbyID<IDto>(int id);
         Task<IResponse> Remove(int id);
         Task<IResponse<WorkUpdatedDto>> Update(WorkUpdatedDto dto);
+        Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure();
 
     }
 }

@@ -23,9 +23,9 @@ namespace Udemy.TodoAppNTier.DataAccess.UnitofWork
         {
            await _context.SaveChangesAsync();
         }
-        //public DbContext GetDbContext()
-        //{
-        //    return _context;
-        //}
+        public DbContext GetDbContext()
+        {
+            return _context;
+        }
     }
 }

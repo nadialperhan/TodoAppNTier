@@ -19,6 +19,7 @@ namespace Udemy.TodoAppNTier.UI.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var a=await _workService.GetWorkDataUsingStoredProcedure();
             var response = await _workService.GetAll();          
             return View(response.Data);                       
         }
