@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
+using Udemy.TodoAppNTier.Dtos.FilterDto;
 using Udemy.TodoAppNTier.Dtos.Interfaces;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
 
@@ -18,7 +19,7 @@ namespace Udemy.TodoAppNTierBusiness.Services
         Task<IResponse<IDto>> GetbyID<IDto>(int id);
         Task<IResponse> Remove(int id);
         Task<IResponse<WorkUpdatedDto>> Update(WorkUpdatedDto dto);
-        Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure();
+        Task<IResponse<List<WorkListDto>>> GetWorkDataUsingStoredProcedure(IndexFilterDto dto);
 
     }
 }

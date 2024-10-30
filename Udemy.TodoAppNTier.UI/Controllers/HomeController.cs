@@ -1,27 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
 using Udemy.TodoAppNTier.DataAccess.Context;
+using Udemy.TodoAppNTier.Dtos.FilterDto;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
 using Udemy.TodoAppNTier.UI.Extensions;
+using Udemy.TodoAppNTier.UI.FilterViewModel;
+using Udemy.TodoAppNTier.UI.ViewModel;
+using Udemy.TodoAppNTierBusiness.Interfaces;
 using Udemy.TodoAppNTierBusiness.Services;
+using X.PagedList;
 
 namespace Udemy.TodoAppNTier.UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IWorkService _workService;
+        private readonly ICommonService _commonService;
 
-        public HomeController(IWorkService workService)
+        public HomeController(IWorkService workService, ICommonService commonService)
         {
             _workService = workService;
+            _commonService = commonService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(IndexFilterDto filter,int page=1)
         {
-            var a=await _workService.GetWorkDataUsingStoredProcedure();
-            var response = await _workService.GetAll();          
-            return View(response.Data);                       
+
+            var b = await _commonService.DropDownParameter(2);
+
+
+            ViewData["Filter"] = filter;
+            var a =await _workService.GetWorkDataUsingStoredProcedure(filter);
+            var pagedList = a.Data.ToPagedList(page, 5);
+
+            WorkFilterModel workFilterModel = new WorkFilterModel()
+            {
+                WorkListDto = pagedList,
+                IndexFilterDto = filter
+            };
+            return View(workFilterModel);                       
+            //return View(pagedList);                       
         }
         [HttpGet]
         public IActionResult Create()

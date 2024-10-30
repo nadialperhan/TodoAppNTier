@@ -28,7 +28,7 @@ namespace Udemy.TodoAppNTier.DataAccess.Repositories
         {
             return await _todoContext.Set<T>().AsNoTracking().ToListAsync();
         }
-
+        
         public async Task<T> GetByFilter(Expression<Func<T, bool>> filter, bool asNoTracking = false)
         {
             return asNoTracking ? await _todoContext.Set<T>().SingleOrDefaultAsync(filter) : await _todoContext.Set<T>().AsNoTracking().SingleOrDefaultAsync(filter);

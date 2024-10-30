@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Udemy.TodoAppNTier.Entities.Domains
 {
-    public class Work:BaseEntity
+    public class ParameterGroup:BaseEntity
     {
-        public string Definition { get; set; }
-        public bool? IsCompleted { get; set; }
+        public string ParameterGroupName { get; set; }
+        public ICollection<Parameter> Parameter { get; set; }
     }
 }

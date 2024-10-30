@@ -13,7 +13,7 @@ namespace Udemy.TodoAppNTier.DataAccess.Configurations
             builder.Property(x => x.Definition).HasMaxLength(300);
             builder.Property(x => x.Definition).IsRequired();
 
-            builder.Property(x => x.IsCompleted).IsRequired();
+            builder.Property(x => x.IsCompleted).IsRequired(false);
 
         }
     }

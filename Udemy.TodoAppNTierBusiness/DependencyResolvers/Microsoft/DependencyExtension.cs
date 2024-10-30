@@ -8,6 +8,7 @@ using System;
 using Udemy.TodoAppNTier.DataAccess.Contexts;
 using Udemy.TodoAppNTier.DataAccess.UnitofWork;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
+using Udemy.TodoAppNTierBusiness.Interfaces;
 using Udemy.TodoAppNTierBusiness.Mapping.AutoMapper;
 using Udemy.TodoAppNTierBusiness.Services;
 using Udemy.TodoAppNTierBusiness.ValidationRules;
@@ -34,6 +35,7 @@ namespace Udemy.TodoAppNTierBusiness.DependencyResolvers.Microsoft
             var configuration = new MapperConfiguration(opt =>
             {
                 opt.AddProfile(new WorkProfile());
+                opt.AddProfile(new ParameterProfile());
             });
 
             var mapper = configuration.CreateMapper();
@@ -42,6 +44,7 @@ namespace Udemy.TodoAppNTierBusiness.DependencyResolvers.Microsoft
 
             services.AddScoped<IUow, Uow>();
             services.AddScoped<IWorkService, WorkService>();
+            services.AddScoped<ICommonService, CommonService>();
 
             services.AddTransient<IValidator<WorkCreateDto>,WorkCreateDtoValidator> ();
             services.AddTransient<IValidator<WorkUpdatedDto>,WorkUpdateDtoValidator> ();

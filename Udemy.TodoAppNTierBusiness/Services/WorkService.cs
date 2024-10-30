@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
 using Udemy.TodoAppNTier.DataAccess.UnitofWork;
+using Udemy.TodoAppNTier.Dtos.FilterDto;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
 using Udemy.TodoAppNTier.Entities.Domains;
 using Udemy.TodoAppNTierBusiness.Extensions;
@@ -37,7 +40,7 @@ namespace Udemy.TodoAppNTierBusiness.Services
                 return new Response<WorkCreateDto>(ResponseType.ValidationError, createDto, validationresult.ConvertToCustomValidationError());
             }
         }
-        
+
         //public Task<IResponse<List<WorkListDtos>>> DenemeNadi()
         //{
         //    throw new System.NotImplementedException();
@@ -50,32 +53,51 @@ namespace Udemy.TodoAppNTierBusiness.Services
         //}
 
         public async Task<IResponse<List<WorkListDtos>>> GetAll()
-        {          
-            var data= _mapper.Map<List<WorkListDtos>>(await _uow.GetRepository<Work>().GetAll());
+        {
+            var data = _mapper.Map<List<WorkListDtos>>(await _uow.GetRepository<Work>().GetAll());
             return new Response<List<WorkListDtos>>(ResponseType.Success, data);
         }
-        public async Task<IResponse< IDto>> GetbyID<IDto>(int id)
-        {          
-            var data= _mapper.Map<IDto>(await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id));
-            if (data==null)
+        public async Task<IResponse<IDto>> GetbyID<IDto>(int id)
+        {
+            var data = _mapper.Map<IDto>(await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id));
+            if (data == null)
             {
                 return new Response<IDto>(ResponseType.NotFound, $"{id} ye ait data bulunamadı");
             }
-            return new Response<IDto>(ResponseType.Success,data);
+            return new Response<IDto>(ResponseType.Success, data);
         }
 
-        public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
+        public async Task<IResponse<List<WorkListDto>>> GetWorkDataUsingStoredProcedure(IndexFilterDto indexfilter)
         {
-            List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
-            parameters.Add(KeyValuePair.Create<string, object>("@Definition", "pari"));
-            parameters.Add(KeyValuePair.Create<string, object>("@IsCompleted", true)); 
+            //List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
+            //parameters.Add(KeyValuePair.Create<string, object>("@Definition", "test"));
+            //parameters.Add(KeyValuePair.Create<string, object>("@IsCompleted", true));
+            string defini = string.Empty;
+            bool? isComp = null;
+            if (!string.IsNullOrEmpty(indexfilter.Definition))
+            {
+                defini = indexfilter.Definition;
+            }
+            if (indexfilter.IsCompleted!=null)
+            {
+                isComp = indexfilter.IsCompleted;
+            }
+            
+            List<SqlParameter> parms = new List<SqlParameter>
+            {
+          
+              new SqlParameter { ParameterName = "@Definition", Value = defini },
+              new SqlParameter { ParameterName = "@IsCompleted", Value = (object)isComp ?? DBNull.Value }
+            };
 
             //parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
             //parameters.Add(KeyValuePair.Create<string, object>("@UserName", "nadi"));
             var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
 
-            var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("Deneme", parameters);
-            return results;
+            //List<WorkListDto> results = await dbContext.ExecuteStoredProcedure<WorkListDto>("Deneme", parms);
+            List<WorkListDto> results = await dbContext.ExecuteStoredProcedure<WorkListDto>("sp_Deneme", parms);
+            return new Response<List<WorkListDto>>(ResponseType.Success, results);
+            //return results;
         }
 
         public async Task<IResponse> Remove(int id)
@@ -104,10 +126,12 @@ namespace Udemy.TodoAppNTierBusiness.Services
                 return new Response<WorkUpdatedDto>(ResponseType.NotFound, "Bulunamadı");
             }
             else
-            {                
+            {
                 return new Response<WorkUpdatedDto>(ResponseType.ValidationError, dto, result.ConvertToCustomValidationError());
             }
         }
+
+       
         //public async Task<List<WorkListDto>> GetWorkDataUsingStoredProcedure()
         //{
         //    List<KeyValuePair<string, object>> parameters = new List<KeyValuePair<string, object>>();
@@ -116,10 +140,10 @@ namespace Udemy.TodoAppNTierBusiness.Services
         //    var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
 
         //    var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("a", parameters);
-            
+
         //    return results;
         //}
 
-       
+
     }
 }

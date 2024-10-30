@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Dtos.Interfaces;
 
-namespace Udemy.TodoAppNTier.Dtos.WorkDtos
+namespace Udemy.TodoAppNTier.Dtos.ParameterDto
 {
-    public class WorkListDto: IDto
+    public class ParameterDropdownDto:IDto
     {
         public int Id { get; set; }
-        public string Definition { get; set; }
-        public bool IsCompleted { get; set; }
+        public string Text { get; set; }
+        public string Value { get; set; }
     }
 }

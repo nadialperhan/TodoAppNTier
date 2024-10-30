@@ -1,11 +1,49 @@
-﻿@model List<WorkListDtos>
+﻿@*@model IPagedList<WorkListDto>*@
+@model Udemy.TodoAppNTier.UI.ViewModel.WorkFilterModel
+@{
+    var filter = ViewData["Filter"] != null ? (IndexFilterDto)ViewData["Filter"] : new IndexFilterDto(); }
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Todo App</title>
     <link href="~/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <a class="btn btn-primary mb-2" asp-controller="Home" asp-action="Create">Yeni Oluştur</a>
+    <div class="container">
+        <a class="btn btn-primary mb-2" asp-controller="Home" asp-action="Create">Yeni Oluştur</a>
+
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        {
+            <div class="container row mb-3">
+                <div class="row">
+                    <div class="col-md-5">
+                        @*<input asp-for="@filter.Definition" class="form-control" placeholder="Definition" />*@
+                        <input type="text" id="ab" name="Definition" value="@filter.Definition" class="form-control" placeholder="Definition" />
+
+
+                    </div>
+                    <div class="col-md-3">
+                        @*<select asp-for="@filter.IsCompleted" class="form-control">
+                                <option value="">--</option>
+                                <option value="true">Tamamlandı</option>
+                                <option value="false">Tamamlanmadı</option>
+                            </select>*@
+                        <select name="IsCompleted" class="form-control">
+                                <option value="">--</option>
+                                <option value="true">Tamamlandı</option>
+                                <option value="false">Tamamlanmadı</option>
+                            </select>
+                        
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Filtrele</button>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
 
     <div class="container" my-2>
         <table class="table table-striped">
@@ -17,7 +55,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.WorkListDto)
                 {
                     <tr>
                         <td>@item.Definition</td>
@@ -30,6 +68,15 @@
                 }
             </tbody>
         </table>
+
+        @Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", new
+  {
+    page,
+    Definition = filter.Definition,
+    IsCompleted = filter.IsCompleted
+}))
+
+
     </div>
 </body>
 </html>

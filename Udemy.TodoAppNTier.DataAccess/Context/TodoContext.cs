@@ -15,10 +15,11 @@ namespace Udemy.TodoAppNTier.DataAccess.Context
         {
 
         }
-        public TodoContext(DbContextOptions<TodoContext> options):base(options)
+        public TodoContext(DbContextOptions<TodoContext> options) : base(options)
         {
 
         }
+       
         public DbSet<Work> Works { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

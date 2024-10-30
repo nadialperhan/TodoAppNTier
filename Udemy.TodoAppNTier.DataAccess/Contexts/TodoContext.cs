@@ -20,7 +20,11 @@ namespace Udemy.TodoAppNTier.DataAccess.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new WorkConfiguration());
+            modelBuilder.ApplyConfiguration(new ParameterConfiguration());
+            modelBuilder.ApplyConfiguration(new ParameterGroupConfiguration());
         }
         public DbSet<Work> Works { get; set; }
+        public DbSet<Parameter> Parameter { get; set; }
+        public DbSet<ParameterGroup> ParameterGroup { get; set; }
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Udemy.TodoAppNTier.Entities.Domains
+namespace Udemy.TodoAppNTier.Dtos.FilterDto
 {
-    public class Work:BaseEntity
+    public class IndexFilterDto
     {
         public string Definition { get; set; }
         public bool? IsCompleted { get; set; }
