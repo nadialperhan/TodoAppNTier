@@ -1,7 +1,23 @@
 ﻿@*@model IPagedList<WorkListDto>*@
+@using Microsoft.AspNetCore.Routing
 @model Udemy.TodoAppNTier.UI.ViewModel.WorkFilterModel
 @{
-    var filter = ViewData["Filter"] != null ? (IndexFilterDto)ViewData["Filter"] : new IndexFilterDto(); }
+    //var filter2 = TempData["Filter"] != null ? (IndexFilterDto)TempData["Filter"] : new IndexFilterDto();
+    var filter = Model.IndexFilterDto;
+
+    var abc = new RouteValueDictionary
+    {
+        {"page",1 }
+    };
+
+
+    foreach (var property in filter.GetType().GetProperties())
+    {
+        var val = property.GetValue(filter);
+        abc.Add("filter." + property.Name, val);
+    }
+}
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Todo App</title>
@@ -11,7 +27,8 @@
 <body>
     <div class="container">
         <a class="btn btn-primary mb-2" asp-controller="Home" asp-action="Create">Yeni Oluştur</a>
-
+        
+        @*<a asp-controller="Home" asp-action="Index" asp-all-route-data="dct" class="btn btn-warning">alper</a>*@
         @using (Html.BeginForm("Index", "Home", FormMethod.Get))
         {
             <div class="container row mb-3">
@@ -19,8 +36,6 @@
                     <div class="col-md-5">
                         @*<input asp-for="@filter.Definition" class="form-control" placeholder="Definition" />*@
                         <input type="text" id="ab" name="Definition" value="@filter.Definition" class="form-control" placeholder="Definition" />
-
-
                     </div>
                     <div class="col-md-3">
                         @*<select asp-for="@filter.IsCompleted" class="form-control">
@@ -29,11 +44,21 @@
                                 <option value="false">Tamamlanmadı</option>
                             </select>*@
                         <select name="IsCompleted" class="form-control">
-                                <option value="">--</option>
-                                <option value="true">Tamamlandı</option>
-                                <option value="false">Tamamlanmadı</option>
-                            </select>
-                        
+                            <option value="">--</option>
+                            <option value="true">Tamamlandı</option>
+                            <option value="false">Tamamlanmadı</option>
+                        </select>
+                        @*<select asp-items="@filter.drpDeneme" asp-for="@filter.SelectedDenemeId" class="form-control">
+                                <option value="0">Seçin</option>
+                            </select>*@
+                        @*<select name="dropdown1" asp-items="@(new SelectList(ViewBag.message, "ID", "FirstName"))"></select>*@
+                        <select name="SelectedDenemeId" asp-items="@filter.drpDeneme">
+                            <option value="null">Seçin</option>
+                        </select>
+                        <select name="IsCompleted" asp-items="@filter.drpIsCompleted">
+                            <option value="null">Seçin</option>
+                        </select>
+
                     </div>
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary">Filtrele</button>
@@ -49,6 +74,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>
+                        <a href="@Url.Action("Index", "Home", abc)">Link Text</a>
+
+                    </th>
                     <th>Definiation</th>
                     <th>isCompleted</th>
                     <th>İşlem</th>
@@ -69,13 +98,15 @@
             </tbody>
         </table>
 
-        @Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", new
-  {
-    page,
-    Definition = filter.Definition,
-    IsCompleted = filter.IsCompleted
-}))
+        @*@Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", new
+   {
+       page,
+       filter = abc,
+       Definition = filter.Definition,
+       IsCompleted = filter.IsCompleted
+   }))*@
 
+        @Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", abc))
 
     </div>
 </body>
