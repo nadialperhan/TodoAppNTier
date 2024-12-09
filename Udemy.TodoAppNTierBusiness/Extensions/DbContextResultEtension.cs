@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.DataAccess.Context;
@@ -15,19 +16,19 @@ namespace Udemy.TodoAppNTierBusiness.Extensions
         {
             using (var ctx=new GenericContext<TResult>(dbContext.Database.GetConnectionString()))
             {
+                //string sortColumn = "Definition";
+                //string sortOrder = "desc";
 
                 var paramNames = string.Join(", ", paramz.Select(param => param.ParameterName));
 
                 spname = "sp_Deneme";
                 var query = $"EXEC {spname} {paramNames}";
+                //string query = string.Empty;
 
-                // Sorguyu çalıştırıyoruz
-                var nadi= ctx.Entities.FromSqlRaw<TResult>(query, paramz.ToArray()).AsNoTracking();
+
+
+                var nadi = ctx.Entities.FromSqlRaw<TResult>(query, paramz.ToArray()).AsNoTracking();
                 return await nadi.ToListAsync();
-
-
-
-
 
                 #region eski
                 //var sqlParams = new SqlParameter[paramz.Count];
@@ -37,14 +38,14 @@ namespace Udemy.TodoAppNTierBusiness.Extensions
                 //    //var prm = new SqlParameter(paramz[i].Key, paramz[i].Key);
                 //    var prm = new SqlParameter( paramz[i].ParameterName, paramz[i].ParameterName); // Anahtar ve değerler düzeltiliyor
                 //    sqlParams[i] = prm;
-                    //if (i>0)
-                    //{
-                    //    prmString += ",{" + i + "}";
-                    //}
-                    //else
-                    //{
-                    //    prmString += "{" + i + "}";
-                    //}
+                //if (i>0)
+                //{
+                //    prmString += ",{" + i + "}";
+                //}
+                //else
+                //{
+                //    prmString += "{" + i + "}";
+                //}
                 //    if (i > 0)
                 //    {
                 //        prmString += "," + paramz[i].ParameterName  ;
@@ -66,8 +67,30 @@ namespace Udemy.TodoAppNTierBusiness.Extensions
                 //    new SqlParameter("@Definition", "pari"),
                 //    new SqlParameter("@IsCompleted", true))
                 //    .AsNoTracking();
-               // return await q.ToListAsync();
+                // return await q.ToListAsync();
                 #endregion
+            }
+        }
+
+        public static  IQueryable<TResult> ExecuteStoredProcedureQueryable<TResult>(this DbContext dbContext, string spname, List<SqlParameter> paramz) where TResult : class, new()
+        {
+            using (var ctx = new GenericContext<TResult>(dbContext.Database.GetConnectionString()))
+            {
+                //string sortColumn = "Definition";
+                //string sortOrder = "desc";
+
+                var paramNames = string.Join(", ", paramz.Select(param => param.ParameterName));
+
+                spname = "sp_Deneme";
+                var query = $"EXEC {spname} {paramNames}";
+                //string query = string.Empty;
+
+
+
+                var nadi = ctx.Entities.FromSqlRaw<TResult>(query, paramz.ToArray()).AsNoTracking();
+                return  nadi;
+
+                
             }
         }
     }

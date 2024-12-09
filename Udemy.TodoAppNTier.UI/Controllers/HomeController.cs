@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
 using Udemy.TodoAppNTier.DataAccess.Context;
@@ -25,15 +27,19 @@ namespace Udemy.TodoAppNTier.UI.Controllers
         private readonly ICommonService _commonService;
         //private readonly IMemoryCache _memoryCache; // IMemoryCache'i ekleyin
 
+        private readonly ILogger<HomeController> _logger;
+
+
         private static bool _isDropdownDataLoaded = false;
         private static SelectList _dropDownData;
         private static SelectList _dropDownCompleted;
 
 
-        public HomeController(IWorkService workService, ICommonService commonService, IMemoryCache memoryCache)
+        public HomeController(IWorkService workService, ICommonService commonService, IMemoryCache memoryCache, ILogger<HomeController> logger)
         {
             _workService = workService;
             _commonService = commonService;
+            _logger = logger;
             //_memoryCache = memoryCache;
 
         }
@@ -51,6 +57,56 @@ namespace Udemy.TodoAppNTier.UI.Controllers
             }
 
         }
+
+        public async Task<IActionResult> Deneme(IndexFilterDto filter, int page = 1)
+        {
+            //var userId = User.Identity?.Name ?? "Unknown";
+            //var requestType = HttpContext.Request.Method;  // GET, POST, vb.
+            //var requestPath = HttpContext.Request.Path;
+            //_logger.LogInformation("User {UserId} accessed {RequestPath} with {RequestType}", userId, requestPath, requestType);
+
+            //filter = null;
+            //if (filter == null)
+            //{
+            //    throw new Exception("Filter cannot be null.");
+            //}
+
+
+            // Bilgi logu yaz
+            // _logger.LogInformation("User {UserId} accessed {RequestPath} with {RequestType}", userId, requestPath, requestType);
+
+            await DropList(); // DropDown verisini initialize et           
+            //filter.drpDeneme = _dropDownData;
+            filter.drpIsCompleted = _dropDownCompleted;
+            //burda viewstatelerden biriyle bi kere alıp null değilse burayı atlarım
+            var a = await _workService.GetWorkDataUsingStoredProcedure(filter);
+
+            //results= results.OrderBy("Definition").ToListAsync();
+
+            var pagedList = a.Data.ToPagedList(page, 5);
+
+            var newFilter = new IndexFilterDto
+            {
+                Definition = filter.Definition,
+                IsCompleted = filter.IsCompleted,
+                sortingOrder=filter.sortingOrder,
+                //SelectedDenemeId = filter.SelectedDenemeId,
+                Page = page
+            };
+
+            WorkFilterModel workFilterModel = new WorkFilterModel()
+            {
+                WorkListDto = pagedList,
+                IndexFilterDto = newFilter
+
+            };
+            return View(workFilterModel);
+        }
+
+
+
+
+
         public async Task<IActionResult> Index(IndexFilterDto filter, int page = 1)
         {
             await DropList(); // DropDown verisini initialize et
@@ -72,7 +128,7 @@ namespace Udemy.TodoAppNTier.UI.Controllers
             //}
 
             // Filtreye dropdown verisini atayın
-            filter.drpDeneme = _dropDownData;
+            //filter.drpDeneme = _dropDownData;
             filter.drpIsCompleted = _dropDownCompleted;
             //burda viewstatelerden biriyle bi kere alıp null değilse burayı atlarım
             //var b = await _commonService.DropDownParameter(2);
@@ -87,8 +143,8 @@ namespace Udemy.TodoAppNTier.UI.Controllers
             {
                 Definition = filter.Definition,
                 IsCompleted = filter.IsCompleted,
-                SelectedDenemeId = filter.SelectedDenemeId,
-                drpDeneme = _dropDownData,
+               // SelectedDenemeId = filter.SelectedDenemeId,
+                //drpDeneme = _dropDownData,
                 drpIsCompleted = _dropDownCompleted,
                 Page=page
             };
@@ -165,6 +221,10 @@ namespace Udemy.TodoAppNTier.UI.Controllers
             //return RedirectToAction("Index");
         }
         public IActionResult NotFound(int code)
+        {
+            return View();
+        }
+        public IActionResult Error()
         {
             return View();
         }

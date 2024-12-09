@@ -1,8 +1,8 @@
 ﻿@*@model IPagedList<WorkListDto>*@
 @using Microsoft.AspNetCore.Routing
+@using Udemy.TodoAppNTier.UI.Extensions
 @model Udemy.TodoAppNTier.UI.ViewModel.WorkFilterModel
 @{
-    //var filter2 = TempData["Filter"] != null ? (IndexFilterDto)TempData["Filter"] : new IndexFilterDto();
     var filter = Model.IndexFilterDto;
 
     var abc = new RouteValueDictionary
@@ -15,6 +15,7 @@
     {
         var val = property.GetValue(filter);
         abc.Add("filter." + property.Name, val);
+        //abc.Add(property.Name, val);
     }
 }
 
@@ -27,9 +28,9 @@
 <body>
     <div class="container">
         <a class="btn btn-primary mb-2" asp-controller="Home" asp-action="Create">Yeni Oluştur</a>
-        
+
         @*<a asp-controller="Home" asp-action="Index" asp-all-route-data="dct" class="btn btn-warning">alper</a>*@
-        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        @using (Html.BeginForm("Deneme", "Home", FormMethod.Get))
         {
             <div class="container row mb-3">
                 <div class="row">
@@ -52,10 +53,12 @@
                                 <option value="0">Seçin</option>
                             </select>*@
                         @*<select name="dropdown1" asp-items="@(new SelectList(ViewBag.message, "ID", "FirstName"))"></select>*@
-                        
-                        <select name="IsCompleted" asp-items="@filter.drpIsCompleted">
+                        @*<select name="SelectedDenemeId" asp-items="@filter.drpDeneme">
                             <option value="null">Seçin</option>
-                        </select>
+                        </select>*@
+                        @*<select name="IsCompleted" asp-items="@filter.drpIsCompleted">
+                            <option value="null">Seçin</option>
+                        </select>*@
 
                     </div>
                     <div class="col-md-2">
@@ -73,7 +76,17 @@
             <thead>
                 <tr>
                     <th>
-                        <a href="@Url.Action("Index", "Home", abc)">Link Text</a>
+                        @*<a href="@Url.Action(" Index", new
+                           {
+                                page=filter.Page,
+                           Definition=filter.Definition,
+                           IsCompleted=filter.IsCompleted
+                           })">
+                            Link Text
+                        </a>
+                        <a href="@Url.GetUrlWithFilters("Deneme", "Home", filter)" style="text-decoration:none;">Extension</a>*@
+                        <a href="@Url.GetUrlWithFiltersGeneric("Deneme", "Home", filter,filter.Page,"Definition")" style="text-decoration:none;">Extension</a>
+                        <a asp-action="Deneme" asp-controller="Home" asp-route-filter="abc" asp-route-page="page">deneme</a>
 
                     </th>
                     <th>Definiation</th>
@@ -96,15 +109,15 @@
             </tbody>
         </table>
 
-        @*@Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", new
-   {
-       page,
-       filter = abc,
-       Definition = filter.Definition,
-       IsCompleted = filter.IsCompleted
-   }))*@
-
-        @Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Index", abc))
+        @*@Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Deneme", new
+            {
+                page,
+                Definition = filter.Definition,
+                IsCompleted = filter.IsCompleted
+            }))*@
+        @Html.PagedListPager(Model.WorkListDto, page =>
+        Url.GetUrlWithFiltersGeneric("Deneme", "Home", filter, page,filter.sortingOrder))
+        @*@Html.PagedListPager((IPagedList)Model.WorkListDto, page => Url.Action("Deneme", abc))*@
 
     </div>
 </body>

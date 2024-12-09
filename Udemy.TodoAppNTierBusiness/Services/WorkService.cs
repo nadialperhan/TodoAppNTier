@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+//using System.Linq;
 using System.Threading.Tasks;
 using Udemy.TodoAppNTier.Common.ResponseObjects;
 using Udemy.TodoAppNTier.DataAccess.UnitofWork;
@@ -10,6 +11,9 @@ using Udemy.TodoAppNTier.Dtos.FilterDto;
 using Udemy.TodoAppNTier.Dtos.WorkDtos;
 using Udemy.TodoAppNTier.Entities.Domains;
 using Udemy.TodoAppNTierBusiness.Extensions;
+using System.Linq.Dynamic.Core;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Udemy.TodoAppNTierBusiness.Services
 {
@@ -82,12 +86,13 @@ namespace Udemy.TodoAppNTierBusiness.Services
             {
                 isComp = indexfilter.IsCompleted;
             }
-            
+            string sortcolumn = "Definition";
             List<SqlParameter> parms = new List<SqlParameter>
             {
           
               new SqlParameter { ParameterName = "@Definition", Value = defini },
               new SqlParameter { ParameterName = "@IsCompleted", Value = (object)isComp ?? DBNull.Value }
+              //new SqlParameter { ParameterName = "@IsCompleted", Value = isComp }
             };
 
             //parameters.Add(KeyValuePair.Create<string, object>("@DbName", "nadi"));
@@ -95,7 +100,15 @@ namespace Udemy.TodoAppNTierBusiness.Services
             var dbContext = _uow.GetDbContext(); // Replace with your logic to get DbContext
 
             //List<WorkListDto> results = await dbContext.ExecuteStoredProcedure<WorkListDto>("Deneme", parms);
-            List<WorkListDto> results = await dbContext.ExecuteStoredProcedure<WorkListDto>("sp_Deneme", parms);
+            //List<WorkListDto> results = await dbContext.ExecuteStoredProcedure<WorkListDto>("sp_Deneme", parms);
+            var results = await dbContext.ExecuteStoredProcedure<WorkListDto>("sp_Deneme", parms);
+            //var resultsq =  dbContext.ExecuteStoredProcedureQueryable<WorkListDto>("sp_Deneme", parms);
+            //var c=resultsq.OrderBy("Definition").ToListAsync();
+            if (!String.IsNullOrEmpty(sortcolumn))
+            {
+                results = results.AsQueryable().OrderBy("Definition").ToList();
+                //results= results.OrderBy("Definition").ToListAsync();
+            }
             return new Response<List<WorkListDto>>(ResponseType.Success, results);
             //return results;
         }
